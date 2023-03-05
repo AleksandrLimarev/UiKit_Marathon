@@ -22,6 +22,8 @@ class ViewController: UIViewController {
         firstButton.sizeToFit()
         firstButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(firstButton)
+        
+        
 
         // Create the second button
         let secondButton = UIButton(type: .system)
@@ -61,6 +63,8 @@ class ViewController: UIViewController {
         thirdButton.imageView?.contentMode = .scaleAspectFit
         thirdButton.semanticContentAttribute = .forceRightToLeft
         thirdButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
+        
+        
 
         
         // Set the constraints for the buttons
@@ -72,8 +76,64 @@ class ViewController: UIViewController {
             thirdButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             thirdButton.topAnchor.constraint(equalTo: secondButton.bottomAnchor, constant: 20),
         ])
+
+        // Add a target to the third button
+        thirdButton.addTarget(self, action: #selector(showModalController), for: .touchUpInside)
     }
+    
+    @objc func showModalController() {
+        let modalController = UIViewController()
+        modalController.modalPresentationStyle = .pageSheet // set modal presentation style
+        
+        // configure modal controller
+        modalController.view.backgroundColor = .white
+        let closeButton = UIButton(type: .system)
+        closeButton.setTitle("Привет выжившим марафонцам:)", for: .normal)
+        closeButton.addTarget(self, action: #selector(dismissModalController), for: .touchUpInside)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        modalController.view.addSubview(closeButton)
+        NSLayoutConstraint.activate([
+            closeButton.centerXAnchor.constraint(equalTo: modalController.view.centerXAnchor),
+            closeButton.topAnchor.constraint(equalTo: modalController.view.topAnchor, constant: 20),
+        ])
+
+        present(modalController, animated: true, completion: nil)
+
+        // add swipe down gesture recognizer
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(dismissModalController))
+        swipeDown.direction = .down
+        modalController.view.addGestureRecognizer(swipeDown)
+    }
+
+    @objc func dismissModalController() {
+        dismiss(animated: true, completion: nil)
+    }
+
+    @objc func handleSwipeDownGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
+        let translation = gestureRecognizer.translation(in: view)
+
+        switch gestureRecognizer.state {
+        case .began:
+            break
+        case .changed:
+            if translation.y > 0 {
+                view.frame.origin.y = translation.y
+            }
+        case .ended:
+            if translation.y > view.bounds.size.height / 2 {
+                dismiss(animated: true, completion: nil)
+            } else {
+                UIView.animate(withDuration: 0.3) {
+                    self.view.frame.origin.y = 0
+                }
+            }
+        default:
+            break
+        }
+    }
+
 }
+
 
 
 
