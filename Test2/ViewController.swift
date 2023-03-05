@@ -8,7 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -23,8 +23,6 @@ class ViewController: UIViewController {
         firstButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(firstButton)
         
-        
-
         // Create the second button
         let secondButton = UIButton(type: .system)
         secondButton.setTitle("Second Button", for: .normal)
@@ -35,7 +33,7 @@ class ViewController: UIViewController {
         secondButton.sizeToFit()
         secondButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(secondButton)
-
+        
         // Create the third button
         let thirdButton = UIButton(type: .system)
         thirdButton.setTitle("Third Button", for: .normal)
@@ -46,26 +44,23 @@ class ViewController: UIViewController {
         thirdButton.sizeToFit()
         thirdButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(thirdButton)
-
+        
         // Add system image view to the right of each button
         let image = UIImage(systemName: "arrow.right.circle.fill")
         firstButton.setImage(image, for: .normal)
         firstButton.imageView?.contentMode = .scaleAspectFit
         firstButton.semanticContentAttribute = .forceRightToLeft
         firstButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
-
+        
         secondButton.setImage(image, for: .normal)
         secondButton.imageView?.contentMode = .scaleAspectFit
         secondButton.semanticContentAttribute = .forceRightToLeft
         secondButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
-
+        
         thirdButton.setImage(image, for: .normal)
         thirdButton.imageView?.contentMode = .scaleAspectFit
         thirdButton.semanticContentAttribute = .forceRightToLeft
         thirdButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
-        
-        
-
         
         // Set the constraints for the buttons
         NSLayoutConstraint.activate([
@@ -76,64 +71,45 @@ class ViewController: UIViewController {
             thirdButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             thirdButton.topAnchor.constraint(equalTo: secondButton.bottomAnchor, constant: 20),
         ])
-
+        
         // Add a target to the third button
         thirdButton.addTarget(self, action: #selector(showModalController), for: .touchUpInside)
+        
+        // Add button scaling animation
+        firstButton.addTarget(self, action: #selector(scaleButton(_:)), for: [.touchDown, .touchUpInside])
+        secondButton.addTarget(self, action: #selector(scaleButton(_:)), for: [.touchDown, .touchUpInside])
+        thirdButton.addTarget(self, action: #selector(scaleButton(_:)), for: [.touchDown, .touchUpInside])
     }
     
+    // Button scaling animation function
+    @objc func scaleButton(_ sender: UIButton) {
+        UIView.animate(withDuration: 0.2, animations: {
+            sender.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.2, animations: {
+                sender.transform = CGAffineTransform.identity
+            })
+        })
+    }
+    
+    // Function to show modal controller
     @objc func showModalController() {
         let modalController = UIViewController()
-        modalController.modalPresentationStyle = .pageSheet // set modal presentation style
+        modalController.modalPresentationStyle = .pageSheet 
+        modalController.view.backgroundColor = UIColor(white: 0, alpha: 0.5)
+        modalController.view.frame = view.frame
         
-        // configure modal controller
-        modalController.view.backgroundColor = .white
-        let closeButton = UIButton(type: .system)
-        closeButton.setTitle("Привет выжившим марафонцам:)", for: .normal)
-        closeButton.addTarget(self, action: #selector(dismissModalController), for: .touchUpInside)
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
-        modalController.view.addSubview(closeButton)
-        NSLayoutConstraint.activate([
-            closeButton.centerXAnchor.constraint(equalTo: modalController.view.centerXAnchor),
-            closeButton.topAnchor.constraint(equalTo: modalController.view.topAnchor, constant: 20),
-        ])
-
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
+        label.text = "Modal Controller"
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
+        label.textAlignment = .center
+        label.center = modalController.view.center
+        modalController.view.addSubview(label)
+        
         present(modalController, animated: true, completion: nil)
-
-        // add swipe down gesture recognizer
-        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(dismissModalController))
-        swipeDown.direction = .down
-        modalController.view.addGestureRecognizer(swipeDown)
     }
-
-    @objc func dismissModalController() {
-        dismiss(animated: true, completion: nil)
-    }
-
-    @objc func handleSwipeDownGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
-        let translation = gestureRecognizer.translation(in: view)
-
-        switch gestureRecognizer.state {
-        case .began:
-            break
-        case .changed:
-            if translation.y > 0 {
-                view.frame.origin.y = translation.y
-            }
-        case .ended:
-            if translation.y > view.bounds.size.height / 2 {
-                dismiss(animated: true, completion: nil)
-            } else {
-                UIView.animate(withDuration: 0.3) {
-                    self.view.frame.origin.y = 0
-                }
-            }
-        default:
-            break
-        }
-    }
-
 }
-
 
 
 
