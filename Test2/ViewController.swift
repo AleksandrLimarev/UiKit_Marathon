@@ -7,71 +7,75 @@
 
 import UIKit
 
-class SquareView: UIView {
-
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    setupView()
-  }
-
-  required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-    setupView()
-  }
-
-  private func setupView() {
-    backgroundColor = .clear
-
-    let gradientLayer = CAGradientLayer()
-    gradientLayer.colors = [UIColor.blue.cgColor, UIColor.green.cgColor]
-    gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
-    gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
-    gradientLayer.frame = bounds
-    gradientLayer.cornerRadius = 20
-    layer.insertSublayer(gradientLayer, at: 0)
-
-    layer.cornerRadius = 20
-    layer.shadowColor = UIColor.black.cgColor
-    layer.shadowOpacity = 0.8
-    layer.shadowRadius = 10
-    layer.shadowOffset = CGSize(width: 0, height: 10)
-  }
-
-  override func layoutSubviews() {
-    super.layoutSubviews()
-
-    if let sublayers = layer.sublayers {
-      for sublayer in sublayers {
-        sublayer.frame = bounds
-      }
-    }
-  }
-}
-
 class ViewController: UIViewController {
 
-  var squareView: SquareView!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Create the first button
+        let firstButton = UIButton(type: .system)
+        firstButton.setTitle("First Button", for: .normal)
+        firstButton.setTitleColor(.white, for: .normal)
+        firstButton.backgroundColor = .blue
+        firstButton.contentEdgeInsets = UIEdgeInsets(top: 10, left: 14, bottom: 10, right: 14)
+        firstButton.layer.cornerRadius = 10
+        firstButton.sizeToFit()
+        firstButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(firstButton)
 
-  override func viewDidLoad() {
-    super.viewDidLoad()
+        // Create the second button
+        let secondButton = UIButton(type: .system)
+        secondButton.setTitle("Second Button", for: .normal)
+        secondButton.setTitleColor(.white, for: .normal)
+        secondButton.backgroundColor = .blue
+        secondButton.contentEdgeInsets = UIEdgeInsets(top: 10, left: 14, bottom: 10, right: 14)
+        secondButton.layer.cornerRadius = 10
+        secondButton.sizeToFit()
+        secondButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(secondButton)
 
-    squareView = SquareView(frame: CGRect(x: 100, y: 0, width: 100, height: 100))
-    squareView.center.y = view.center.y
-    view.addSubview(squareView)
-  }
+        // Create the third button
+        let thirdButton = UIButton(type: .system)
+        thirdButton.setTitle("Third Button", for: .normal)
+        thirdButton.setTitleColor(.white, for: .normal)
+        thirdButton.backgroundColor = .blue
+        thirdButton.contentEdgeInsets = UIEdgeInsets(top: 10, left: 14, bottom: 10, right: 14)
+        thirdButton.layer.cornerRadius = 10
+        thirdButton.sizeToFit()
+        thirdButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(thirdButton)
 
-  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-    super.viewWillTransition(to: size, with: coordinator)
+        // Add system image view to the right of each button
+        let image = UIImage(systemName: "arrow.right.circle.fill")
+        firstButton.setImage(image, for: .normal)
+        firstButton.imageView?.contentMode = .scaleAspectFit
+        firstButton.semanticContentAttribute = .forceRightToLeft
+        firstButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
 
-    coordinator.animate(alongsideTransition: { _ in
-      let statusBarHeight = self.view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
-      let yPosition = (size.height - statusBarHeight - self.squareView.frame.height) / 2.0
-      let xPosition = min(100, (size.width - self.squareView.frame.width) / 2.0)
+        secondButton.setImage(image, for: .normal)
+        secondButton.imageView?.contentMode = .scaleAspectFit
+        secondButton.semanticContentAttribute = .forceRightToLeft
+        secondButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
 
-      self.squareView.frame.origin = CGPoint(x: xPosition, y: yPosition)
-    }, completion: nil)
-  }
+        thirdButton.setImage(image, for: .normal)
+        thirdButton.imageView?.contentMode = .scaleAspectFit
+        thirdButton.semanticContentAttribute = .forceRightToLeft
+        thirdButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
+
+        
+        // Set the constraints for the buttons
+        NSLayoutConstraint.activate([
+            firstButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            firstButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -40),
+            secondButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            secondButton.topAnchor.constraint(equalTo: firstButton.bottomAnchor, constant: 20),
+            thirdButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            thirdButton.topAnchor.constraint(equalTo: secondButton.bottomAnchor, constant: 20),
+        ])
+    }
 }
+
+
 
 
 
