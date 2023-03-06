@@ -12,6 +12,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        var presentedModalController: UIViewController?
+
         // Create the first button
         let firstButton = UIButton(type: .system)
         firstButton.setTitle("First Button", for: .normal)
@@ -79,6 +81,8 @@ class ViewController: UIViewController {
         firstButton.addTarget(self, action: #selector(scaleButton(_:)), for: [.touchDown, .touchUpInside])
         secondButton.addTarget(self, action: #selector(scaleButton(_:)), for: [.touchDown, .touchUpInside])
         thirdButton.addTarget(self, action: #selector(scaleButton(_:)), for: [.touchDown, .touchUpInside])
+        
+        
     }
     
     // Button scaling animation function
@@ -94,13 +98,14 @@ class ViewController: UIViewController {
     
     // Function to show modal controller
     @objc func showModalController() {
+        
         let modalController = UIViewController()
-        modalController.modalPresentationStyle = .pageSheet 
+        modalController.modalPresentationStyle = .pageSheet
         modalController.view.backgroundColor = UIColor(white: 0, alpha: 0.5)
         modalController.view.frame = view.frame
         
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
-        label.text = "Modal Controller"
+        label.text = "Modal"
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
         label.textAlignment = .center
